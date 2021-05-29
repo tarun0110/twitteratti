@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb+srv://tarun:tarun123@bootcampproj.zdnc8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtSecret": "mysecrettoken"
+}
