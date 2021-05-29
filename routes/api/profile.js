@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
+const Posts = require('../../models/Posts');
 const auth = require('../../middleware/auth');
 const {check, validationResult} = require('express-validator');
 
@@ -54,6 +55,8 @@ router.post('/', auth, async (req,res)=>{
     }
 });
 
+
+// to get all the profiles
 router.get('/', async (req,res) =>{
     try{
         const profiles = await Profile.find().populate('user', ['name', 'avatar']);
@@ -64,6 +67,7 @@ router.get('/', async (req,res) =>{
     }
 });
 
+// to get profile of one user
 router.get('/user/:user_id', async (req,res) =>{
     try{
         const profile = await Profile.findOne({user: req.params.user_id}).populate('user', ['name', 'avatar']);
@@ -82,8 +86,9 @@ router.get('/user/:user_id', async (req,res) =>{
 //to delete the whole user
 router.delete('/', auth, async (req, res) => {
     try{    // first delete posts
+        await Posts.deleteMany({user: req.user.id});
         //delete profile
-        
+
         await Profile.findOneAndDelete({user: req.user.id });
         //delete user
         await User.findOneAndDelete({_id: req.user.id});

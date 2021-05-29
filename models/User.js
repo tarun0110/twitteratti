@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     name:{
         type: String,
-        require: true
+        required: true
     },
     email:{
         type: String,
-        require: true,
+        required: true,
         unique: true
     },
     password:{
         type: String,
-        require: true
+        required: true
     },
     avatar:{
         type: String
@@ -19,7 +19,21 @@ const UserSchema = new mongoose.Schema({
     date:{
         type: Date,
         default: Date.now
+    },
+    following:[{
+        user:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'user'
+        }
     }
+    ],
+    followers:[{
+        user:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'user'
+        }
+    }
+    ]
 });
 
 module.exports = User = mongoose.model('user', UserSchema);

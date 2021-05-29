@@ -6,6 +6,7 @@ const {check, validationResult} = require('express-validator');
 const User = require('../../models/User');
 const config= require('config');
 const jwt = require('jsonwebtoken');
+const auth = require('../../middleware/auth');
 
 router.post('/', [
     check('name','Name is req').not().isEmpty(),
@@ -66,5 +67,48 @@ async (req,res) => {
     }
 
 });
+
+// to follow someone by their user id
+router.put('/follow/:id', auth, async(req,res)=>{
+    try{
+        //user1 is the one following user2
+        const user2 = await User.findById(req.params.id);
+        const user1 = await User.findById(req.user.id);
+        if(user1.following.filter(following=>following.user.toString()===req.params.id).length > 0){
+            return res.status(400).json({msg: 'You already follow'});
+        }
+        user1.following.unshift({user: req.params.id});
+        user2.followers.unshift({user: req.user.id});
+        await user2.save();
+        await user1.save();
+        res.json({msg: 'followed'});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send('server error');
+    }
+});
+
+//to unfollow some user by its user id
+router.put('/unfollow/:id', auth, async(req,res)=>{
+    try{
+        //user1 is the one unfollowing user2
+        const user2 = await User.findById(req.params.id);
+        const user1 = await User.findById(req.user.id);
+        if(user1.following.filter(following=>following.user.toString()===req.params.id).length === 0){
+            return res.status(400).json({msg: 'You do not follow'});
+        }
+        let removeIndex = user2.followers.map(follower=>follower.user.toString()).indexOf(req.user.id);
+        user2.followers.splice(removeIndex,1);
+        removeIndex = user1.following.map(following=>following.user.toString()).indexOf(req.params.id);
+        user1.following.splice(removeIndex,1);
+        await user2.save();
+        await user1.save();
+        res.json({msg: "unfollowed"});
+    }catch(err){
+        console.log(err.message);
+        res.status(500).send('server error');
+    }
+});
+
 
 module.exports = router;
