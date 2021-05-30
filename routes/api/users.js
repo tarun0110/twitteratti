@@ -81,11 +81,12 @@ router.put('/follow/:id', auth, async(req,res)=>{
         user2.followers.unshift({user: req.user.id});
         await user2.save();
         await user1.save();
-        res.json({msg: 'followed'});
+        res.json(user2.followers);
+        // res.json({msg: 'followed'});
     }catch(err){
         console.log(err.message);
         res.status(500).send('server error');
-    }
+    }   
 });
 
 //to unfollow some user by its user id
@@ -103,7 +104,8 @@ router.put('/unfollow/:id', auth, async(req,res)=>{
         user1.following.splice(removeIndex,1);
         await user2.save();
         await user1.save();
-        res.json({msg: "unfollowed"});
+        res.json(user2.followers);
+        // res.json({msg: "unfollowed"});
     }catch(err){
         console.log(err.message);
         res.status(500).send('server error');

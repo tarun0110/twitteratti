@@ -1,4 +1,4 @@
-import { GET_PROFILE , PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE, GET_PROFILES} from "../actions/types";
+import { GET_PROFILE , PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE, GET_PROFILES, FOLLOW_ERROR,FOLLOW , UNFOLLOW} from "../actions/types";
 
 const initialState = {
     profile: null,
@@ -24,6 +24,24 @@ export default function(state = initialState, action){
                 ...state,
                 profiles: payload,
                 loading: false
+            }
+        case FOLLOW:
+            return{
+                ...state,
+                loading: false,
+                profiles: state.profiles.map(profile=> profile._id===payload.id? {...profile, following: payload.following}: profile)
+            }
+        case UNFOLLOW:
+            return{
+                ...state,
+                loading: false,
+                profiles: state.profiles.map(profile=> profile._id===payload.id? {...profile, following: payload.following}: profile)
+            }
+        case FOLLOW_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: payload
             }
         case PROFILE_ERROR:
             return {

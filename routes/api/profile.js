@@ -59,7 +59,7 @@ router.post('/', auth, async (req,res)=>{
 // to get all the profiles
 router.get('/', async (req,res) =>{
     try{
-        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+        const profiles = await Profile.find().populate('user', ['name', 'avatar','following', 'followers']);
         res.json(profiles);
     }catch(err){
         console.log(err.message);

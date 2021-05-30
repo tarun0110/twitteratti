@@ -1,7 +1,7 @@
 import axios from "axios";
 import { setAlert } from "./alert";
 
-import { ACCOUNT_DELETED, GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, GET_PROFILES } from "./types";
+import { ACCOUNT_DELETED, GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, GET_PROFILES,FOLLOW,FOLLOW_ERROR, UNFOLLOW } from "./types";
 
 //get current user profiles
 export const getCurrentProfile= () => async dispatch => {
@@ -107,6 +107,53 @@ export const getProfileById= userId => async dispatch => {
     }catch(err){
         dispatch({
             type: PROFILE_ERROR,
+            payload: {
+                msg: err.response.statusText,
+                status: err.response.status
+            }
+        });
+    }
+};
+
+//follow
+export const follow = id => async dispatch => {
+    try{
+        const res = await axios.put(`/api/users/follow/${id}`);
+        // document.getElementsByClassName('follow123').innerHTML="following";
+        console.log('following');
+        dispatch({
+            type: FOLLOW,
+            payload: {id,follower:res.data}
+        });
+        window.location.reload();
+        dispatch(setAlert('Follwing now', 'success'));
+    }catch(err){
+        dispatch({
+            type: FOLLOW_ERROR,
+            payload: {
+                msg: err.response.statusText,
+                status: err.response.status
+            }
+        });
+    }
+};
+
+//unfollow
+export const  unfollow = id => async dispatch => {
+    try{
+        const res = await axios.put(`/api/users/unfollow/${id}`);
+        // document.getElementsByClassName('follow123').innerHTML="following";
+        console.log('unfollowed');
+        dispatch({
+            type: UNFOLLOW,
+            payload: {id,follower:res.data}
+        });
+        window.location.reload();
+        dispatch(setAlert('Unfollowed', 'success'));
+
+    }catch(err){
+        dispatch({
+            type: FOLLOW_ERROR,
             payload: {
                 msg: err.response.statusText,
                 status: err.response.status
