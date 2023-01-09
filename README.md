@@ -1,5 +1,5 @@
 "# twitteratti" 
-This is a bootcamp learning project I built in my internship. It is not live at https://floating-sea-80765.herokuapp.com/  hosted on heroku. 
+This is a bootcamp learning project I built in my internship. It is now live at https://floating-sea-80765.herokuapp.com/  hosted on heroku. 
 In this social media clone, I have tried to build twitter like functionality. 
 -> register and login
 -> make profile
